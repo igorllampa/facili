@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="CadastroProdutoServiceUnitTest.deveFalhar_QuandoCadastrarProdutoComNomeVazio" project="facilit-ecommerce" tests="1" started="1" failures="0" errors="0" ignored="0">
+  <testsuite name="br.com.facilitecommerce.unit.CadastroProdutoServiceUnitTest" time="0.264" displayname="CadastroProdutoServiceUnitTest" uniqueid="[engine:junit-jupiter]/[class:br.com.facilitecommerce.unit.CadastroProdutoServiceUnitTest]">
+    <testcase name="deveFalhar_QuandoCadastrarProdutoComNomeVazio" classname="br.com.facilitecommerce.unit.CadastroProdutoServiceUnitTest" time="0.264" displayname="deveFalhar_QuandoCadastrarProdutoComNomeVazio()" uniqueid="[engine:junit-jupiter]/[class:br.com.facilitecommerce.unit.CadastroProdutoServiceUnitTest]/[method:deveFalhar_QuandoCadastrarProdutoComNomeVazio()]"/>
+  </testsuite>
+</testrun>

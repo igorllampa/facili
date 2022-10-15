@@ -1,0 +1,43 @@
+package br.com.facilitecommerce.domain.service;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import br.com.facilitecommerce.domain.exception.EntidadeEmUsoException;
+import br.com.facilitecommerce.domain.exception.ProdutoNaoEncontradoException;
+import br.com.facilitecommerce.domain.model.Produto;
+import br.com.facilitecommerce.domain.repository.ProdutoRepository;
+
+@Service
+public class CadastroProdutoService {
+
+	private static final String PRODUTO_EM_USO = "O produto %d não pode ser removido, pois está em uso.";
+	
+	@Autowired
+	private ProdutoRepository produtoRepository;
+	
+	@Transactional
+	public Produto salvar (Produto produto) {
+		return produtoRepository.save(produto);
+	}
+	
+	@Transactional
+	public void remover(Long produtoId) {
+		try {
+			produtoRepository.deleteById(produtoId);
+		}catch (EmptyResultDataAccessException e) {
+			throw new ProdutoNaoEncontradoException(produtoId);
+		}catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(String.format(PRODUTO_EM_USO, produtoId));			
+		}
+	}
+	
+	public Produto buscar(Long produtoId) {
+		return produtoRepository.findById(produtoId)
+				.orElseThrow(() -> new ProdutoNaoEncontradoException(produtoId) );
+	}
+}

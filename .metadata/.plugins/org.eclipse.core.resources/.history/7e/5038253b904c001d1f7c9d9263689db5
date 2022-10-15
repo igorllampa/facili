@@ -1,0 +1,62 @@
+package br.com.facilitecommerce.api.controller;
+
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.facilitecommerce.domain.model.Cupom;
+import br.com.facilitecommerce.domain.repository.CupomRepository;
+import br.com.facilitecommerce.domain.service.CadastroCupomService;
+
+@RestController
+@RequestMapping("cupons")
+public class CupomController {
+
+	@Autowired
+	private CadastroCupomService cadastroCupom;
+	
+	@Autowired
+	private CupomRepository cupomRepository;
+	
+	@GetMapping
+	public List<Cupom> listar(){
+		return cupomRepository.findAll();
+	}
+		
+	@GetMapping("/{cupomId}")
+	public Cupom buscar(@PathVariable Long cupomId) {
+		return cadastroCupom.buscar(cupomId);
+	}
+	
+	@PostMapping()
+	@ResponseStatus(HttpStatus.CREATED)
+	public Cupom adicionar(@RequestBody Cupom cupom) {
+		return cadastroCupom.salvar(cupom);
+	}
+	
+	@PutMapping("/{cupomId}")
+	public Cupom atualizar(@PathVariable Long cupomId, @RequestBody Cupom cupom) {
+		Cupom cupomAtual = cadastroCupom.buscar(cupomId);
+		
+		BeanUtils.copyProperties(cupom, cupomAtual, "id");
+		
+		return cadastroCupom.salvar(cupomAtual);
+	}
+	
+	@DeleteMapping("/{cupomId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long cupomId) {
+		cadastroCupom.remover(cupomId);
+	}	
+}

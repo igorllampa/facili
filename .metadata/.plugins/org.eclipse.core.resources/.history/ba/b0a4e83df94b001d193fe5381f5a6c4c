@@ -1,0 +1,15 @@
+package br.com.facilitecommerce.api.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.facilitecommerce.domain.service.CadastroCupomService;
+
+@RestController
+@RequestMapping("cupons")
+public class CupomController {
+
+	@Autowired
+	private CadastroCupomService cadastroCupom;
+}

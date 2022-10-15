@@ -1,0 +1,14 @@
+package br.com.facilitecommerce.domain.exception;
+
+public class CupomNaoEncontradoException extends EntidadeNaoEncontradaException {
+	
+	private static final long serialVersionUID = 1L;
+
+	public CupomNaoEncontradoException(String mensagem) {
+		super(mensagem);
+	}
+	
+	public CupomNaoEncontradoException(Long produtoId) {
+		this(String.format("O produto %d não foi encontrado.", produtoId));
+	}
+}

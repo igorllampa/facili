@@ -1,0 +1,10 @@
+package br.com.facilitecommerce.domain.model;
+
+import java.math.BigDecimal;
+
+public class Cupom {
+
+	private Long id;
+	private String nome;
+	private BigDecimal valor;
+}

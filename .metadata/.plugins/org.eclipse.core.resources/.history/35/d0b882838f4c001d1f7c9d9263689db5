@@ -1,0 +1,3 @@
+NotBlank={0} é obrigatório
+NotNull={0} é obrigatório
+Size={0} deve conter de {2} a {1} caracteres

@@ -1,0 +1,31 @@
+package br.com.facilitecommerce.unit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.math.BigDecimal;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import br.com.facilitecommerce.domain.model.Produto;
+import br.com.facilitecommerce.domain.service.CadastroProdutoService;
+
+@SpringBootTest
+public class CadastroProdutoServiceUnitTest {
+
+	@Autowired
+	CadastroProdutoService cadastroProdutoService;
+	
+	@Test 
+	public void deveRetornarSucesso_QuandoCadastrarProduto() {
+	    Produto produto = new Produto();
+	    produto.setNome("Produto Teste");
+	    produto.setPreco(new BigDecimal(18.90));
+	    
+	    Produto produtoCadastrado = cadastroProdutoService.salvar(produto);
+	    
+	    assertNotNull(produtoCadastrado);	    	   
+	}
+}

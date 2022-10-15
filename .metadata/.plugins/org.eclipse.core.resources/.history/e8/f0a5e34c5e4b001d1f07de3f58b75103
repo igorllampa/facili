@@ -1,0 +1,8 @@
+create table carrinho(
+  id    integer auto_increment,
+  produto
+  nome  varchar(10),
+  valor decimal(12,2),
+  primary key (id),
+  CONSTRAINT UC_nome UNIQUE (nome)
+);

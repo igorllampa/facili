@@ -1,0 +1,32 @@
+package br.com.facilitecommerce.domain.service;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.com.facilitecommerce.domain.model.Cupom;
+import br.com.facilitecommerce.domain.repository.CupomRepository;
+
+@Service
+public class CadastroCupomService {
+
+	@Autowired
+	private CupomRepository cupomRepository;
+	
+	@Transactional
+	public Cupom salvar(Cupom cupom) {
+		return cupomRepository.save(cupom);		
+	}
+	
+	@Transactional
+	public void remover(Long cupomId) {
+		cupomRepository.deleteById(cupomId);
+	}
+	
+	public Cupom buscar(Long cupomId) {
+		return cupomRepository.findById(cupomId)
+			.orElseThrow(() -> new RuntimeException("Erro"));
+	}
+	
+}

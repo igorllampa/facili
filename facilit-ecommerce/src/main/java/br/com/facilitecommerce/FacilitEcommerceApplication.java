@@ -1,0 +1,12 @@
+package br.com.facilitecommerce;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class FacilitEcommerceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(FacilitEcommerceApplication.class, args);
+	}
+}

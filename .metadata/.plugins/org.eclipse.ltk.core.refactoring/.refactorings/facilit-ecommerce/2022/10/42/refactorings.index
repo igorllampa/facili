@@ -1,0 +1,18 @@
+1665709934135	Copy file
+1665710176823	Copy file
+1665710194146	Rename resource 'V003_cria-tabela-cupom.sql'
+1665710353824	Rename resource 'V004_cria-tabela-cupom.sql'
+1665710365064	Rename resource 'V003_cria-tabela-carrinho.sql'
+1665710433499	Delete element
+1665710526628	Delete elements
+1665754412547	Rename resource 'V001_setup.sql'
+1665754419028	Rename resource 'V002_cria-tabela-produto.sql'
+1665754423687	Rename resource 'V003_cria-tabela-cupom.sql'
+1665755335382	Delete element
+1665755342926	Delete element
+1665755346902	Delete element
+1665755865872	Delete element
+1665755877521	Copy compilation unit
+1665774704773	Extract constant 'PRODUTO_EM_USO'
+1665777222978	Extract constant 'CUPOM_EM_USO'
+1665846372654	Extract constant 'NOME_CUPOM_EM_USO'

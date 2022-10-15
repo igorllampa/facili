@@ -1,0 +1,47 @@
+package br.com.facilitecommerce.domain.service;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import br.com.facilitecommerce.domain.exception.CupomNaoEncontradoException;
+import br.com.facilitecommerce.domain.exception.EntidadeEmUsoException;
+import br.com.facilitecommerce.domain.exception.NegocioException;
+import br.com.facilitecommerce.domain.model.Cupom;
+import br.com.facilitecommerce.domain.repository.CupomRepository;
+
+@Service
+public class CadastroCupomService {
+
+	private static final String CUPOM_EM_USO = "Cupom %d está em uso, por isso não pode ser removido";
+	@Autowired
+	private CupomRepository cupomRepository;
+	
+	@Transactional
+	public Cupom salvar(Cupom cupom) {
+		try {
+			return cupomRepository.save(cupom);
+		}catch (DataIntegrityViolationException e) {
+			throw new NegocioException("Esta indentificacao de cupom já existe");
+		}
+	}
+	
+	@Transactional
+	public void remover(Long cupomId) {
+		try {		
+			cupomRepository.deleteById(cupomId);
+		}catch (EmptyResultDataAccessException e) {
+			throw new CupomNaoEncontradoException(cupomId);
+		}catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(String.format(CUPOM_EM_USO, cupomId));			
+		}
+	}
+	
+	public Cupom buscar(Long cupomId) {
+		return cupomRepository.findById(cupomId)
+			.orElseThrow(() -> new CupomNaoEncontradoException(cupomId));
+	}	
+}

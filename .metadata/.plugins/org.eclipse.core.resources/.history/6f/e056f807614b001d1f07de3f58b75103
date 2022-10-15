@@ -1,0 +1,15 @@
+package br.com.facilitecommerce.api.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.facilitecommerce.domain.repository.ProdutoRepository;
+
+@RestController
+public class ProdutoController {
+
+	@Autowired
+	private ProdutoRepository produtoRepository;
+	
+	
+}
