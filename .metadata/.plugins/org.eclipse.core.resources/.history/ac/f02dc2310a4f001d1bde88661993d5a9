@@ -1,0 +1,33 @@
+package br.com.facilitecommerce.domain.model;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Entity
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Cupom {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@NotBlank
+	@Size(min = 3, max = 10)
+	private String nome;
+	
+	@DecimalMin(value = "0.00", inclusive = false)
+	@Digits(integer = 12, fraction = 2)
+	private BigDecimal valor;	
+}

@@ -1,0 +1,98 @@
+package br.com.facilitecommerce.api.controller;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.facilitecommerce.api.model.input.CarrinhoInput;
+import br.com.facilitecommerce.domain.model.Carrinho;
+import br.com.facilitecommerce.domain.model.ItemCarrinho;
+import br.com.facilitecommerce.domain.repository.CarrinhoRepository;
+import br.com.facilitecommerce.domain.service.CadastroCarrinhoService;
+
+@RestController
+@RequestMapping("/carrinho")
+public class CarrinhoController {
+
+	
+	@Autowired
+	private CadastroCarrinhoService cadastroCarrinho;
+	
+	@Autowired
+	private CarrinhoRepository carrinhoRepository;
+	
+	@GetMapping
+	public List<Carrinho> listar() {
+		return carrinhoRepository.findAll();
+	}
+	
+	@GetMapping("/{carrinhoId}")	
+	public Carrinho buscar(@PathVariable Long carrinhoId) {
+		return cadastroCarrinho.buscar(carrinhoId);
+	}
+	
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public Carrinho adicionar(@RequestBody @Valid CarrinhoInput carrinhoInput) {
+		
+		Carrinho carrinho = new Carrinho();
+		List<ItemCarrinho> itens = new ArrayList<>();
+		
+		carrinho.setCupom(null);
+		carrinho.setItens(itens);
+		carrinho.setTotalBruto(BigDecimal.ZERO);
+		carrinho.setTotalDesconto(BigDecimal.ZERO);
+		carrinho.setTotalLiquido(BigDecimal.ZERO);
+				
+		carrinhoInput.getItens().stream()
+			.map(item -> {
+				
+				ItemCarrinho itemCarrinho = new ItemCarrinho();
+				itemCarrinho.setCarrinho(carrinho);
+				itemCarrinho.setProduto(item);
+				itemCarrinho.setQuantidade(null);
+				itemCarrinho.setValorTotal(null);
+				itemCarrinho.setValorUnitario(null);
+				
+				return itens.add(itemCarrinho);
+			})
+			.collect(Collectors.toList());
+		
+		
+		return null;
+		//return cadastroCarrinho.salvar();
+	}
+	
+	@PutMapping("/{carrinhoId}")
+	public Carrinho atualizar(@PathVariable Long carrinhoId, @RequestBody @Valid CarrinhoInput carrinhoInput){
+		
+		//Carrinho carrinhoAtual = cadastroCarrinho.buscar(carrinhoId);
+		
+		//BeanUtils.copyProperties(carrinho, carrinhoAtual, "id");
+		
+		//return cadastroCarrinho.salvar(carrinhoAtual);
+		return null;
+	}
+	
+	@DeleteMapping("/{carrinhoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long carrinhoId) {
+		cadastroCarrinho.remover(carrinhoId);
+	}
+}

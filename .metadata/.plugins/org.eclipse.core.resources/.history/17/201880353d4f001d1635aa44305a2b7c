@@ -1,0 +1,9 @@
+package br.com.facilitecommerce.api.controller;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class CarrinhoController {
+
+	
+}

@@ -1,0 +1,13 @@
+package br.com.facilitecommerce.domain.model;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Entity;
+
+@Entity
+public class ItemCarrinho {
+
+	private Long id;
+	private Produto produto;
+	private BigDecimal quantidade;
+}

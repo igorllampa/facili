@@ -1,0 +1,22 @@
+create table carrinho(
+  id    			bigint auto_increment,
+  cupom_id 			integer,
+  total_bruto 		decimal(12,2),
+  total_desconto 	decimal(12,2),
+  total_liquido 	decimal(12,2),    
+  primary key (id),
+  CONSTRAINT FK_Cupom FOREIGN KEY (cupom_id) REFERENCES cupom (id)   
+) engine=InnoDB charset=utf8;
+
+create table item_carrinho(
+  id    			bigint not null auto_increment,   
+  quantidade 		smallint(6) not null,
+  valor_unitario 	decimal(10,2) not null,
+  valor_total 		decimal(10,2) not null,  
+  produto_id 		bigint not null,  
+  carrinho_id 		bigint not null,
+  primary key(id),  
+  foreign key fk_item_carrinho_produto (produto_id) references produto(id),
+  foreign key fk_item_carrinho_carrinho (carrinho_id) references pedido(id)
+
+) engine=InnoDB charset=utf8;
