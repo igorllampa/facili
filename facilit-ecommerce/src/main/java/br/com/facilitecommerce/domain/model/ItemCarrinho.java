@@ -45,6 +45,12 @@ public class ItemCarrinho {
 	@JoinColumn(name="carrinho_id", nullable = false)	
 	private Carrinho carrinho;
 	
+	public void buscarValorUnitario() {
+		if (this.produto != null) {
+			this.valorUnitario = this.produto.getPreco();
+		}
+	}
+	
 	public void calcularValorTotal() {
 		BigDecimal valorUnitario = this.getValorUnitario();
 		BigDecimal quantidade = this.getQuantidade();

@@ -7,11 +7,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import br.com.facilitecommerce.domain.exception.CarrinhoNaoEncontradoException;
+import br.com.facilitecommerce.domain.exception.CupomNaoEncontradoException;
 import br.com.facilitecommerce.domain.exception.EntidadeEmUsoException;
+import br.com.facilitecommerce.domain.exception.ItemCarrinhoNaoEncontradoException;
 import br.com.facilitecommerce.domain.exception.ProdutoNaoEncontradoException;
 import br.com.facilitecommerce.domain.model.Carrinho;
+import br.com.facilitecommerce.domain.model.ItemCarrinho;
 import br.com.facilitecommerce.domain.model.Produto;
 import br.com.facilitecommerce.domain.repository.CarrinhoRepository;
+import br.com.facilitecommerce.domain.repository.ItemCarrinhoRepository;
 import br.com.facilitecommerce.domain.repository.ProdutoRepository;
 
 @Service
@@ -20,6 +25,9 @@ public class CadastroCarrinhoService {
 	@Autowired
 	private CarrinhoRepository carrinhoRepository;
 	
+	@Autowired
+	private ItemCarrinhoRepository itemCarrinhoRepository;
+	
 	@Transactional
 	public Carrinho salvar (Carrinho carrinho) {
 		return carrinhoRepository.save(carrinho);
@@ -27,13 +35,29 @@ public class CadastroCarrinhoService {
 	
 	@Transactional
 	public void remover(Long carrinhoId) {
-		
-		carrinhoRepository.deleteById(carrinhoId);
-		
+		try {
+			carrinhoRepository.deleteById(carrinhoId);
+		}catch (EmptyResultDataAccessException e) {
+			throw new CarrinhoNaoEncontradoException(carrinhoId);
+		}			
 	}
-	
+			
 	public Carrinho buscar(Long carrinhoId) {
 		return carrinhoRepository.findById(carrinhoId)
-				.orElseThrow(() -> new ProdutoNaoEncontradoException(carrinhoId) );
+				.orElseThrow(() -> new CarrinhoNaoEncontradoException(carrinhoId) );
+	}
+	
+	@Transactional
+	public void removerItemCarrinho(Long carrinhoId, Long itemCarrinhoId) {
+		Carrinho carrinho = buscar(carrinhoId);
+		
+		try {
+			itemCarrinhoRepository.deleteById(itemCarrinhoId);
+			//carrinho = buscar(carrinhoId);
+			//carrinho.calcularTotais();
+			//salvar(carrinho);			
+		}catch (EmptyResultDataAccessException e) {
+			throw new ItemCarrinhoNaoEncontradoException(carrinhoId, itemCarrinhoId);
+		}
 	}
 }

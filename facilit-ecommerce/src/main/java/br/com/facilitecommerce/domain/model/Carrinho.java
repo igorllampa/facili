@@ -27,11 +27,11 @@ public class Carrinho {
 	@EqualsAndHashCode.Include
 	private Long id;
 		
-	private BigDecimal totalBruto;
+	private BigDecimal totalBruto = BigDecimal.ZERO;
 	
-	private BigDecimal totalDesconto;
+	private BigDecimal totalDesconto = BigDecimal.ZERO;
 	
-	private BigDecimal totalLiquido;
+	private BigDecimal totalLiquido = BigDecimal.ZERO;
 	
 	@ManyToOne
 	@JoinColumn(name="cupom_id", nullable = true)
@@ -41,18 +41,32 @@ public class Carrinho {
 	@NotNull
 	private List<ItemCarrinho> itens = new ArrayList<>();
 	
-	public void calcularValorTotal() {
-		var valorTotal = BigDecimal.ZERO;
-		
-		for (ItemCarrinho item : this.getItens()) {
-			//valorTotal.add(new BigDecimal(10.00));
-			System.out.println("Total do Item: " + item.getValorTotal());
-		}				
-		
-		System.out.println("valorTotal: " + valorTotal);		
+	public void calcularValorTotalBruto() {
+		BigDecimal valorTotal = new BigDecimal(0);		
+		for (ItemCarrinho item : this.getItens()) {			
+			valorTotal = valorTotal.add(item.getValorTotal());			
+		}								
 		this.setTotalBruto(valorTotal);
 		this.setTotalDesconto(BigDecimal.ZERO);
 		this.setTotalLiquido(valorTotal);
 	}
 	
+	public void calcularValorTotalDesconto() {
+		
+		if (cupom == null) {
+			this.setTotalDesconto(BigDecimal.ZERO);
+		}else {
+			this.setTotalDesconto(this.cupom.getValor());
+		}			
+	}
+	
+	public void calcularValorTotalLiquido() {
+		this.setTotalLiquido(this.getTotalBruto().subtract(this.getTotalDesconto()));
+	}
+	
+	public void calcularTotais() {
+		this.calcularValorTotalBruto();
+		this.calcularValorTotalDesconto();
+		this.calcularValorTotalLiquido();
+	}
 }

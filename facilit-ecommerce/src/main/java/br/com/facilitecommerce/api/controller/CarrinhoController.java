@@ -1,13 +1,9 @@
 package br.com.facilitecommerce.api.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.facilitecommerce.api.assembler.CarrinhoInputDisassembler;
 import br.com.facilitecommerce.api.model.input.CarrinhoInput;
 import br.com.facilitecommerce.domain.model.Carrinho;
 import br.com.facilitecommerce.domain.model.ItemCarrinho;
@@ -42,6 +39,9 @@ public class CarrinhoController {
 	@Autowired
 	private CarrinhoRepository carrinhoRepository;
 	
+	@Autowired
+	private CarrinhoInputDisassembler carrinhoInputDisassembler;
+	
 	@GetMapping
 	public List<Carrinho> listar() {
 		return carrinhoRepository.findAll();
@@ -56,49 +56,44 @@ public class CarrinhoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Carrinho adicionar(@RequestBody @Valid CarrinhoInput carrinhoInput) {
 		
-		Carrinho carrinho = new Carrinho();			
-		List<ItemCarrinho> itens = new ArrayList<>();
+		Carrinho carrinho = carrinhoInputDisassembler.toDomainObject(carrinhoInput);		
+		carrinho.calcularValorTotalBruto();
+		carrinho.calcularValorTotalDesconto();
+		carrinho.calcularValorTotalLiquido();		
 		
-		carrinho.setCupom(null);		
-		carrinho.setTotalBruto(BigDecimal.ZERO);
-		carrinho.setTotalDesconto(BigDecimal.ZERO);
-		carrinho.setTotalLiquido(BigDecimal.ZERO);
-		carrinho.setItens(itens);
-				
-		carrinhoInput.getItens().stream()
-			.map(item -> {
-				
-				Produto produto = cadastroProduto.buscar(item.getProdutoId());					
-				ItemCarrinho itemCarrinho = new ItemCarrinho();
-				itemCarrinho.setCarrinho(carrinho);
-				itemCarrinho.setProduto(produto);
-				itemCarrinho.setQuantidade(item.getQuantidade());
-				itemCarrinho.setValorUnitario(produto.getPreco());
-				itemCarrinho.calcularValorTotal();				
-				
-				return itens.add(itemCarrinho);
-			})
-			.collect(Collectors.toList());
-					
-		carrinho.getItens()
-			.stream()
-			.forEach(a -> System.out.println(a.getProduto().getId() + " - " + a.getQuantidade()));
-		
-		carrinho.calcularValorTotal();
-			
 		return cadastroCarrinho.salvar(carrinho);
 	}
 	
 	@PutMapping("/{carrinhoId}")
-	public Carrinho atualizar(@PathVariable Long carrinhoId, @RequestBody @Valid CarrinhoInput carrinhoInput){
+	public Carrinho adicionarItensCarrinho(@PathVariable Long carrinhoId, @RequestBody @Valid CarrinhoInput carrinhoInput){
 		
-		//Carrinho carrinhoAtual = cadastroCarrinho.buscar(carrinhoId);
+		Carrinho carrinhoAtual = cadastroCarrinho.buscar(carrinhoId);
+		List<ItemCarrinho> itemCarrinhoAtual = carrinhoAtual.getItens();
 		
-		//BeanUtils.copyProperties(carrinho, carrinhoAtual, "id");
+		Carrinho carrinhoComNovosItens = carrinhoInputDisassembler.toDomainObject(carrinhoInput);
+		carrinhoComNovosItens.getItens().stream()
+			.forEach((item) -> {	
+				
+				Produto produto = cadastroProduto.buscar(item.getProduto().getId());
+				item.setCarrinho(carrinhoAtual);
+				item.setProduto(produto);
+				item.buscarValorUnitario();
+				item.calcularValorTotal();				
+				itemCarrinhoAtual.add(item);
+			});		
 		
-		//return cadastroCarrinho.salvar(carrinhoAtual);
-		return null;
+		carrinhoAtual.setItens(itemCarrinhoAtual);				
+		carrinhoAtual.calcularTotais();
+		
+		return cadastroCarrinho.salvar(carrinhoAtual);
 	}
+	
+	@DeleteMapping("/{carrinhoId}/{itemCarrinhoId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long carrinhoId, @PathVariable Long itemCarrinhoId) {		
+		cadastroCarrinho.removerItemCarrinho(carrinhoId, itemCarrinhoId);
+	}
+	
 	
 	@DeleteMapping("/{carrinhoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
