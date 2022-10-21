@@ -11,4 +11,6 @@ public class CupomNaoEncontradoException extends EntidadeNaoEncontradaException 
 	public CupomNaoEncontradoException(Long cupomId) {
 		this(String.format("O cupom %d não foi encontrado.", cupomId));
 	}
+	
+	
 }

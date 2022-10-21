@@ -1,7 +1,9 @@
 package br.com.facilitecommerce.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import javax.management.RuntimeErrorException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.facilitecommerce.api.assembler.CarrinhoInputDisassembler;
 import br.com.facilitecommerce.api.model.input.CarrinhoInput;
+import br.com.facilitecommerce.domain.exception.CupomNaoEncontradoException;
+import br.com.facilitecommerce.domain.exception.EntidadeEmUsoException;
+import br.com.facilitecommerce.domain.exception.EntidadeNaoEncontradaException;
 import br.com.facilitecommerce.domain.model.Carrinho;
+import br.com.facilitecommerce.domain.model.Cupom;
 import br.com.facilitecommerce.domain.model.ItemCarrinho;
 import br.com.facilitecommerce.domain.model.Produto;
 import br.com.facilitecommerce.domain.repository.CarrinhoRepository;
+import br.com.facilitecommerce.domain.repository.CupomRepository;
 import br.com.facilitecommerce.domain.service.CadastroCarrinhoService;
 import br.com.facilitecommerce.domain.service.CadastroProdutoService;
 
@@ -41,6 +48,9 @@ public class CarrinhoController {
 	
 	@Autowired
 	private CarrinhoInputDisassembler carrinhoInputDisassembler;
+	
+	@Autowired
+	private CupomRepository cupomRepository;
 	
 	@GetMapping
 	public List<Carrinho> listar() {
@@ -86,6 +96,26 @@ public class CarrinhoController {
 		carrinhoAtual.calcularTotais();
 		
 		return cadastroCarrinho.salvar(carrinhoAtual);
+	}
+	
+	@PutMapping("/adicionar-cupom/{carrinhoId}/{nomeCupom}")
+	public Carrinho adicionarCupomCarrinho(@PathVariable Long carrinhoId, @PathVariable String nomeCupom) {		
+		Cupom cupom = cupomRepository.findByNome(nomeCupom);				
+		
+		if (cupom != null) {
+			Carrinho carrinhoAtual = cadastroCarrinho.buscar(carrinhoId);
+			
+			if (cupom.getValor().compareTo(carrinhoAtual.getCupom().getValor()) == 1) {
+				carrinhoAtual.setCupom(cupom);		
+				carrinhoAtual.calcularTotais();				
+				carrinhoAtual = cadastroCarrinho.salvar(carrinhoAtual);
+			}
+				
+			return carrinhoAtual;
+		}else {
+			throw new CupomNaoEncontradoException("Cupom não encontrado");
+		}
+		
 	}
 	
 	@DeleteMapping("/{carrinhoId}/{itemCarrinhoId}")

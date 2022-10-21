@@ -7,4 +7,6 @@ import br.com.facilitecommerce.domain.model.Cupom;
 public interface CupomRepository extends JpaRepository<Cupom, Long> {
 
 	boolean existsByNome(String nome);
+	
+	Cupom findByNome(String nome);
 }

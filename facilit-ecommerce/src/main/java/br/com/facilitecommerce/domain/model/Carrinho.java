@@ -56,16 +56,14 @@ public class Carrinho {
 		double valorDescontoProgressivo = 0;	
 		double valorDescontoCupom = 0;
 		double valorTotal = this.totalBruto.doubleValue();		
-		
-		
+				
 		if (valorTotal >= 1000 && valorTotal < 5000) {
 			valorDescontoProgressivo = valorTotal*5/100;
 		}else if(valorTotal >= 5000 && valorTotal < 10000) {
 			valorDescontoProgressivo = valorTotal*7/100;
 		}else if(valorTotal >= 10000) {
 			valorDescontoProgressivo = valorTotal*10/100;
-		}
-		
+		}		
 				
 		if (cupom == null) {
 			//this.setTotalDesconto(BigDecimal.ZERO);

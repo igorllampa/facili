@@ -45,5 +45,9 @@ public class CadastroCupomService {
 	public Cupom buscar(Long cupomId) {
 		return cupomRepository.findById(cupomId)
 			.orElseThrow(() -> new CupomNaoEncontradoException(cupomId));
-	}	
+	}
+	
+	public Cupom buscarPorNome(String nome) {
+		return cupomRepository.findByNome(nome);				
+	}
 }
