@@ -49,13 +49,12 @@ public class CadastroCarrinhoService {
 	
 	@Transactional
 	public void removerItemCarrinho(Long carrinhoId, Long itemCarrinhoId) {
+		
 		Carrinho carrinho = buscar(carrinhoId);
 		
 		try {
 			itemCarrinhoRepository.deleteById(itemCarrinhoId);
-			//carrinho = buscar(carrinhoId);
-			//carrinho.calcularTotais();
-			//salvar(carrinho);			
+									
 		}catch (EmptyResultDataAccessException e) {
 			throw new ItemCarrinhoNaoEncontradoException(carrinhoId, itemCarrinhoId);
 		}

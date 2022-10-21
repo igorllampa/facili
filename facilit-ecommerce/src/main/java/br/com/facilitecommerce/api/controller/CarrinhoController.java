@@ -92,6 +92,11 @@ public class CarrinhoController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long carrinhoId, @PathVariable Long itemCarrinhoId) {		
 		cadastroCarrinho.removerItemCarrinho(carrinhoId, itemCarrinhoId);
+		
+		//Atualiza totais do carrinho
+		Carrinho carrinho = buscar(carrinhoId);
+		carrinho.calcularTotais();
+		cadastroCarrinho.salvar(carrinho);
 	}
 	
 	

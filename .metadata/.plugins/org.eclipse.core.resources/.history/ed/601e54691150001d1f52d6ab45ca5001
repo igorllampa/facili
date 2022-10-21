@@ -1,0 +1,14 @@
+package br.com.facilitecommerce.domain.exception;
+
+public class ItemCarrinhoNaoEncontradoException extends EntidadeNaoEncontradaException {
+	
+	private static final long serialVersionUID = 1L;
+
+	public ItemCarrinhoNaoEncontradoException(String mensagem) {
+		super(mensagem);
+	}
+	
+	public ItemCarrinhoNaoEncontradoException(Long carrinhoId) {
+		this(String.format("O carrinho %d não foi encontrado.", carrinhoId));
+	}
+}
