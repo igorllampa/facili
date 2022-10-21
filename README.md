@@ -6,7 +6,7 @@
 -IDE:Spring Tool Suite 4/Eclipse 
 
 
-# Resources to test the with the API
+# Resources provided by the API
 
 ## /produtos
 ## /cupons
