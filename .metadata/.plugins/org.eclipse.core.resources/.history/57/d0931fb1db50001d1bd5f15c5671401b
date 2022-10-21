@@ -53,29 +53,11 @@ public class Carrinho {
 	
 	public void calcularValorTotalDesconto() {
 		
-		double valorDescontoProgressivo = 0;	
-		double valorDescontoCupom = 0;
-		double valorTotal = this.totalBruto.doubleValue();		
-		
-		
-		if (valorTotal >= 1000 && valorTotal < 5000) {
-			valorDescontoProgressivo = valorTotal*5/100;
-		}else if(valorTotal >= 5000 && valorTotal < 10000) {
-			valorDescontoProgressivo = valorTotal*7/100;
-		}else if(valorTotal >= 10000) {
-			valorDescontoProgressivo = valorTotal*10/100;
-		}
-		
-				
 		if (cupom == null) {
-			//this.setTotalDesconto(BigDecimal.ZERO);
-			valorDescontoCupom = 0;
+			this.setTotalDesconto(BigDecimal.ZERO);
 		}else {
-			//this.setTotalDesconto(this.cupom.getValor());
-			valorDescontoCupom = this.cupom.getValor().doubleValue();
+			this.setTotalDesconto(this.cupom.getValor());
 		}			
-		
-		this.setTotalDesconto(new BigDecimal(valorDescontoProgressivo+valorDescontoCupom));
 	}
 	
 	public void calcularValorTotalLiquido() {

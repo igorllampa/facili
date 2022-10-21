@@ -97,7 +97,8 @@ public class CarrinhoController {
 		Carrinho carrinho = buscar(carrinhoId);
 		carrinho.calcularTotais();
 		cadastroCarrinho.salvar(carrinho);
-	}	
+	}
+	
 	
 	@DeleteMapping("/{carrinhoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
